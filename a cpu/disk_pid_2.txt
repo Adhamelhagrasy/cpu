@@ -1,0 +1,12 @@
+pc=0
+inst=7
+I:semWait userInput
+I:assign a input
+I:assign b input
+I:semSignal userInput
+I:semWait file
+I:writeFile a b
+I:semSignal file
+V:_=_
+V:_=_
+V:_=_

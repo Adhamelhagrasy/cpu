@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OS5 Control Room</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="page-shell">
+        <aside class="hero-panel">
+            <p class="eyebrow">Browser UI</p>
+            <h1>OS5 Control Room</h1>
+            <p class="lede">
+                Configure the scheduler, launch the simulator, and answer runtime prompts directly in the browser.
+            </p>
+            <div class="hero-card">
+                <h2>Included sample programs</h2>
+                <button class="ghost-button" id="load-samples" type="button">Load sample scenario</button>
+                <ul class="sample-list">
+                    <li><code>Program_1.txt</code> asks for two numbers and prints a range.</li>
+                    <li><code>Program_2.txt</code> asks for filename/content and writes to disk.</li>
+                    <li><code>Program_3.txt</code> asks for a filename and prints its contents.</li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="workspace">
+            <section class="panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="eyebrow">Scenario Setup</p>
+                        <h2>Simulation Inputs</h2>
+                    </div>
+                    <button class="secondary-button" id="add-program" type="button">Add program</button>
+                </div>
+
+                <form id="run-form">
+                    <div class="field-grid">
+                        <label class="field">
+                            <span>Scheduler</span>
+                            <select id="scheduler" name="scheduler">
+                                <option value="RR">Round Robin</option>
+                                <option value="HRRN">HRRN</option>
+                                <option value="MLFQ">MLFQ</option>
+                            </select>
+                        </label>
+
+                        <label class="field" id="quantum-field">
+                            <span>Quantum</span>
+                            <input id="quantum" name="quantum" type="number" min="1" value="2">
+                        </label>
+                    </div>
+
+                    <div class="programs-header">
+                        <div>
+                            <p class="eyebrow">Arrival Queue</p>
+                            <p class="hint">Program files are resolved relative to the project folder.</p>
+                        </div>
+                        <span class="program-count" id="program-count">1 program</span>
+                    </div>
+
+                    <div id="program-list" class="program-list"></div>
+
+                    <div class="program-actions">
+                        <button class="secondary-button" id="add-program-inline" type="button">Add another program</button>
+                    </div>
+
+                    <div class="actions">
+                        <button class="primary-button" id="run-button" type="submit">Run simulation</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="panel output-panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="eyebrow">Results</p>
+                        <h2>Execution Output</h2>
+                    </div>
+                    <span class="status-pill" id="status-pill">Idle</span>
+                </div>
+
+                <div class="output-meta" id="output-meta">
+                    Submit a scenario to start <code>os_sim.exe</code>. Any runtime input requests will appear below.
+                </div>
+
+                <pre id="output" class="output-screen">No run yet.</pre>
+
+                <form id="prompt-form" class="prompt-panel hidden">
+                    <label class="field">
+                        <span id="prompt-label">Runtime input</span>
+                        <input id="prompt-input" type="text" autocomplete="off" placeholder="Type the next input value">
+                    </label>
+                    <div class="actions prompt-actions">
+                        <button class="primary-button" id="submit-input" type="submit">Send input</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script src="/app.js"></script>
+</body>
+</html>

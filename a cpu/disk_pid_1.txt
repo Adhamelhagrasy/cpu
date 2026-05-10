@@ -1,0 +1,12 @@
+pc=2
+inst=7
+I:semWait userInput
+I:assign x input
+I:assign y input
+I:semSignal userInput
+I:semWait userOutput
+I:printFromTo x y
+I:semSignal userOutput
+V:x=1
+V:_=_
+V:_=_
