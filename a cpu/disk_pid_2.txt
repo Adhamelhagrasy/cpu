@@ -1,4 +1,4 @@
-pc=0
+pc=5
 inst=7
 I:semWait userInput
 I:assign a input
@@ -7,6 +7,6 @@ I:semSignal userInput
 I:semWait file
 I:writeFile a b
 I:semSignal file
-V:_=_
+V:b=_
 V:_=_
 V:_=_

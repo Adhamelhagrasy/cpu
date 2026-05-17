@@ -1,4 +1,4 @@
-pc=2
+pc=5
 inst=7
 I:semWait userInput
 I:assign x input
@@ -8,5 +8,5 @@ I:semWait userOutput
 I:printFromTo x y
 I:semSignal userOutput
 V:x=1
-V:_=_
+V:y=9
 V:_=_

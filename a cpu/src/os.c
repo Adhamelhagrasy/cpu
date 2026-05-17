@@ -73,5 +73,6 @@ void os_run(OS *os) {
 
     run_scheduler(os, sched, quantum, arrivals, count);
     print_memory(os);
+    release_finished_memory(os);
     printf("\nSimulation finished at tick %d\n", os->clockTick);
 }

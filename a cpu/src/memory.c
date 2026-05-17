@@ -34,11 +34,35 @@ static void unescape_value(const char *src, char *dst, size_t cap) {
     dst[j] = '\0';
 }
 
+static Process *word_owner(OS *os, int word) {
+    for (int i = 0; i < os->processCount; i++) {
+        Process *p = &os->processTable[i];
+        if (p->memoryLowerBound >= 0 && word >= p->memoryLowerBound && word <= p->memoryUpperBound) return p;
+    }
+    return NULL;
+}
+
+static bool word_is_available(OS *os, int word) {
+    if (!os->memoryUsed[word]) return true;
+    Process *owner = word_owner(os, word);
+    return owner != NULL && owner->state == STATE_FINISHED;
+}
+
+static void reclaim_finished_overlap(OS *os, int lo, int hi) {
+    for (int i = 0; i < os->processCount; i++) {
+        Process *p = &os->processTable[i];
+        if (p->state != STATE_FINISHED || p->memoryLowerBound < 0) continue;
+        if (p->memoryUpperBound < lo || p->memoryLowerBound > hi) continue;
+        p->memoryLowerBound = -1;
+        p->memoryUpperBound = -1;
+    }
+}
+
 static bool find_free_contiguous(OS *os, int size, int *lo, int *hi) {
     for (int i = 0; i <= MEMORY_WORDS - size; i++) {
         bool ok = true;
         for (int j = i; j < i + size; j++) {
-            if (os->memoryUsed[j]) {
+            if (!word_is_available(os, j)) {
                 ok = false;
                 i = j;
                 break;
@@ -88,6 +112,7 @@ bool ensure_memory_for(OS *os, Process *p, int excludePID) {
     while (!find_free_contiguous(os, need, &lo, &hi)) {
         if (!disk_swap_out_one(os, excludePID)) return false;
     }
+    reclaim_finished_overlap(os, lo, hi);
     p->memoryLowerBound = lo;
     p->memoryUpperBound = hi;
     for (int i = lo; i <= hi; i++) os->memoryUsed[i] = true;
@@ -158,6 +183,12 @@ const char *get_variable(OS *os, Process *p, const char *name) {
         if (strcmp(p->varNames[i], name) == 0) return p->varValues[i];
     }
     return NULL;
+}
+
+void release_finished_memory(OS *os) {
+    for (int i = 0; i < os->processCount; i++) {
+        if (os->processTable[i].state == STATE_FINISHED) release_process_memory(os, &os->processTable[i]);
+    }
 }
 
 void print_memory(OS *os) {

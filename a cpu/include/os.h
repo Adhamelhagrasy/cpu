@@ -117,6 +117,7 @@ void store_pcb_fields(OS *os, Process *p);
 void set_variable(OS *os, Process *p, const char *name, const char *value);
 const char *get_variable(OS *os, Process *p, const char *name);
 void print_memory(OS *os);
+void release_finished_memory(OS *os);
 
 int create_process(OS *os, const char *programFile, int arrivalTime);
 ExecResult execute_instruction(OS *os, Process *p, const char *line);

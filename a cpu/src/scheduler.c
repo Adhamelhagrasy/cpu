@@ -101,7 +101,6 @@ void run_scheduler(OS *os, SchedulerType sched, int rrQuantum, ProgramArrival *a
                 p->state = STATE_FINISHED;
                 p->finishedAt = os->clockTick;
                 store_pcb_fields(os, p);
-                release_process_memory(os, p);
                 break;
             }
             const char *inst = p->instructions[p->programCounter++];
@@ -116,7 +115,6 @@ void run_scheduler(OS *os, SchedulerType sched, int rrQuantum, ProgramArrival *a
                 p->state = STATE_FINISHED;
                 p->finishedAt = os->clockTick;
                 store_pcb_fields(os, p);
-                release_process_memory(os, p);
                 break;
             }
         }
